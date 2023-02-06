@@ -47,6 +47,7 @@ macro_rules! ctor_attributes {
             #[cfg_attr(target_os = "dragonfly", link_section = ".init_array")]
             #[cfg_attr(target_os = "illumos", link_section = ".init_array")]
             #[cfg_attr(target_os = "haiku", link_section = ".init_array")]
+            #[cfg_attr(target_os = "none", link_section = ".init_array")]
             #[cfg_attr(any(target_os = "macos", target_os = "ios"), link_section = "__DATA,__mod_init_func")]
             #[cfg_attr(windows, link_section = ".CRT$XCU")]
         )
@@ -128,6 +129,7 @@ macro_rules! ctor_attributes {
 /// #[cfg_attr(target_os = "netbsd", link_section = ".init_array")]
 /// #[cfg_attr(target_os = "openbsd", link_section = ".init_array")]
 /// #[cfg_attr(target_os = "illumos", link_section = ".init_array")]
+/// #[cfg_attr(target_os = "none", link_section = ".init_array")]
 /// #[cfg_attr(any(target_os = "macos", target_os = "ios"), link_section = "__DATA,__mod_init_func")]
 /// #[cfg_attr(target_os = "windows", link_section = ".CRT$XCU")]
 /// static FOO: extern fn() = {
@@ -170,7 +172,7 @@ pub fn ctor(_attribute: TokenStream, function: TokenStream) -> TokenStream {
 
         let tokens = ctor_attributes!();
         let output = quote!(
-            #[cfg(not(any(target_os = "linux", target_os = "android", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd", target_os = "dragonfly", target_os = "illumos", target_os = "haiku", target_os = "macos", target_os = "ios", windows)))]
+            #[cfg(not(any(target_os = "linux", target_os = "none", target_os = "android", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd", target_os = "dragonfly", target_os = "illumos", target_os = "haiku", target_os = "macos", target_os = "ios", windows)))]
             compile_error!("#[ctor] is not supported on the current target");
 
             #(#attrs)*
@@ -227,7 +229,7 @@ pub fn ctor(_attribute: TokenStream, function: TokenStream) -> TokenStream {
 
         let tokens = ctor_attributes!();
         let output = quote!(
-            #[cfg(not(any(target_os = "linux", target_os = "android", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd", target_os = "dragonfly", target_os = "illumos", target_os = "haiku", target_os = "macos", target_os = "ios", windows)))]
+            #[cfg(not(any(target_os = "linux", target_os = "none", target_os = "android", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd", target_os = "dragonfly", target_os = "illumos", target_os = "haiku", target_os = "macos", target_os = "ios", windows)))]
             compile_error!("#[ctor] is not supported on the current target");
 
             // This is mutable, but only by this macro code!
